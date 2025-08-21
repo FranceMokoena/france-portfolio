@@ -23,6 +23,29 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  /* Mobile optimizations */
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* Mobile-specific optimizations */
+@media (max-width: 768px) {
+  body {
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
+  
+  /* Improve touch targets */
+  button, a, [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Better scrolling on mobile */
+  html {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
 }
 
 /* Custom Animations */
@@ -64,6 +87,39 @@ body {
   }
 }
 
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 /* Animation Classes */
 .animate-gradient {
   background-size: 200% 200%;
@@ -80,6 +136,30 @@ body {
 
 .animate-pulse-glow {
   animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.3s ease-out forwards;
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.3s ease-out forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.3s ease-out forwards;
+}
+
+/* Mobile-specific animations */
+@media (max-width: 768px) {
+  .animate-fade-in-up {
+    animation-duration: 0.4s;
+  }
+  
+  .animate-slide-in-right,
+  .animate-slide-in-left {
+    animation-duration: 0.2s;
+  }
 }
 
 /* Background Pattern */
@@ -101,6 +181,14 @@ body {
   background: rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Mobile-optimized glassmorphism */
+@media (max-width: 768px) {
+  .glass,
+  .glass-dark {
+    backdrop-filter: blur(5px);
+  }
 }
 
 /* Custom Scrollbar */
@@ -138,6 +226,14 @@ body {
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
 }
 
+/* Mobile touch effects */
+@media (max-width: 768px) {
+  .hover-lift:active {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  }
+}
+
 /* Text Selection */
 ::selection {
   background: linear-gradient(45deg, #3b82f6, #8b5cf6);
@@ -150,6 +246,13 @@ body {
   ring: 2px;
   ring-color: #3b82f6;
   ring-offset: 2px;
+}
+
+/* Mobile focus styles */
+@media (max-width: 768px) {
+  .focus-ring:focus {
+    ring-offset: 1px;
+  }
 }
 
 /* Loading Animation */
@@ -186,5 +289,59 @@ body {
   }
   50% {
     border-color: #3b82f6;
+  }
+}
+
+/* Mobile navigation optimizations */
+.mobile-menu {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mobile-menu-button {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Mobile card hover effects */
+@media (max-width: 768px) {
+  .mobile-card-hover:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+  }
+}
+
+/* Prevent text selection on interactive elements */
+.no-select {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Mobile-safe areas */
+.safe-area-top {
+  padding-top: env(safe-area-inset-top);
+}
+
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Mobile performance optimizations */
+@media (max-width: 768px) {
+  * {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+  }
+  
+  /* Reduce motion for users who prefer it */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import StructuredData from "./components/StructuredData";
+import Navigation from "./components/Navigation";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -104,52 +105,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100`}
       >
-        {/* Navigation */}
-        <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between h-16">
-              {/* Logo */}
-              <a href="/" className="flex items-center space-x-3 group">
-                <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                  <span className="text-white font-bold text-lg">F</span>
-                </div>
-                <span className="font-bold text-xl text-gray-900 dark:text-gray-100 group-hover:text-blue-600 transition-colors duration-300">
-                  France Witness
-                </span>
-              </a>
-
-              {/* Desktop Navigation */}
-              <div className="hidden md:flex items-center space-x-8">
-                {[
-                  { href: "/", label: "Home" },
-                  { href: "/about", label: "About" },
-                  { href: "/skills", label: "Skills" },
-                  { href: "/projects", label: "Projects" },
-                  { href: "/certificates", label: "Certificates" },
-                  { href: "/contacts", label: "Contact" }
-                ].map((link) => (
-                  <a
-                    key={link.href}
-                    href={link.href}
-                    className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors duration-300 relative group"
-                  >
-                    {link.label}
-                    <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-purple-600 group-hover:w-full transition-all duration-300"></span>
-                  </a>
-                ))}
-              </div>
-
-              {/* Mobile menu button */}
-              <div className="md:hidden">
-                <button className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300">
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                  </svg>
-                </button>
-              </div>
-            </div>
-          </div>
-        </nav>
+        <Navigation />
         
         {/* Main Content */}
         <main className="pt-16">
