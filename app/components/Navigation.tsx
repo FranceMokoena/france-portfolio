@@ -1,9 +1,13 @@
 "use client";
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { useRouter, usePathname } from 'next/navigation';
 
 export default function Navigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const router = useRouter();
+  const pathname = usePathname();
 
   // Handle scroll effect
   useEffect(() => {
@@ -30,6 +34,11 @@ export default function Navigation() {
     return () => document.removeEventListener('click', handleClickOutside);
   }, [isMobileMenuOpen]);
 
+  // Close mobile menu when route changes
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [pathname]);
+
   // Close mobile menu when clicking on a link
   const handleLinkClick = () => {
     setIsMobileMenuOpen(false);
@@ -53,26 +62,30 @@ export default function Navigation() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <a href="/" className="flex items-center space-x-3 group z-50">
+          <Link href="/" className="flex items-center space-x-3 group z-50">
             <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
               <span className="text-white font-bold text-lg">F</span>
             </div>
             <span className="font-bold text-xl text-gray-900 dark:text-gray-100 group-hover:text-blue-600 transition-colors duration-300">
               France Witness
             </span>
-          </a>
+          </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {navigationLinks.map((link) => (
-              <a
+              <Link
                 key={link.href}
                 href={link.href}
-                className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors duration-300 relative group"
+                className={`text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors duration-300 relative group ${
+                  pathname === link.href ? 'text-blue-600 dark:text-blue-400' : ''
+                }`}
               >
                 {link.label}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-purple-600 group-hover:w-full transition-all duration-300"></span>
-              </a>
+                <span className={`absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-blue-600 to-purple-600 transition-all duration-300 ${
+                  pathname === link.href ? 'w-full' : 'w-0 group-hover:w-full'
+                }`}></span>
+              </Link>
             ))}
           </div>
 
@@ -107,18 +120,20 @@ export default function Navigation() {
         } overflow-hidden`}>
           <div className="py-4 space-y-2 border-t border-gray-200 dark:border-gray-700">
             {navigationLinks.map((link, index) => (
-              <a
+              <Link
                 key={link.href}
                 href={link.href}
                 onClick={handleLinkClick}
-                className="block px-4 py-3 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg font-medium transition-all duration-300 transform hover:translate-x-2"
+                className={`block px-4 py-3 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg font-medium transition-all duration-300 transform hover:translate-x-2 ${
+                  pathname === link.href ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20' : ''
+                }`}
                 style={{ 
                   animationDelay: `${index * 50}ms`,
                   animation: isMobileMenuOpen ? 'slideInRight 0.3s ease-out forwards' : 'none'
                 }}
               >
                 {link.label}
-              </a>
+              </Link>
             ))}
           </div>
         </div>

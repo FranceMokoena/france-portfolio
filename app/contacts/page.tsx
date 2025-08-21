@@ -9,20 +9,37 @@ export default function ContactPage() {
     message: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setSubmitStatus('idle');
     
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // For now, open mail app with pre-filled data
-    const mailtoLink = `mailto:francewitness9@gmail.com?subject=${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(`Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`)}`;
-    window.open(mailtoLink);
-    
-    setIsSubmitting(false);
-    setFormData({ name: "", email: "", subject: "", message: "" });
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setSubmitStatus('success');
+        setFormData({ name: "", email: "", subject: "", message: "" });
+      } else {
+        setSubmitStatus('error');
+        console.error('Contact form error:', data.error);
+      }
+    } catch (error) {
+      console.error('Contact form error:', error);
+      setSubmitStatus('error');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -143,6 +160,30 @@ export default function ContactPage() {
             <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">
               💬 Send Me a Message
             </h3>
+            
+            {/* Success/Error Messages */}
+            {submitStatus === 'success' && (
+              <div className="mb-4 p-4 rounded-lg bg-green-50 border border-green-200 dark:bg-green-900/20 dark:border-green-800">
+                <div className="flex items-center gap-2">
+                  <span className="text-green-600 text-lg">✅</span>
+                  <p className="text-green-800 dark:text-green-200 font-medium">
+                    Message sent successfully! I'll get back to you soon.
+                  </p>
+                </div>
+              </div>
+            )}
+            
+            {submitStatus === 'error' && (
+              <div className="mb-4 p-4 rounded-lg bg-red-50 border border-red-200 dark:bg-red-900/20 dark:border-red-800">
+                <div className="flex items-center gap-2">
+                  <span className="text-red-600 text-lg">❌</span>
+                  <p className="text-red-800 dark:text-red-200 font-medium">
+                    Failed to send message. Please try again or email me directly at francewitness9@gmail.com
+                  </p>
+                </div>
+              </div>
+            )}
+            
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
@@ -212,9 +253,22 @@ export default function ContactPage() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full md:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-medium rounded-lg transition-colors"
+                className="w-full md:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-medium rounded-lg transition-colors flex items-center gap-2"
               >
-                {isSubmitting ? "Sending..." : "Send Message"}
+                {isSubmitting ? (
+                  <>
+                    <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Sending...
+                  </>
+                ) : (
+                  <>
+                    <span>📧</span>
+                    Send Message
+                  </>
+                )}
               </button>
             </form>
           </div>
@@ -222,7 +276,7 @@ export default function ContactPage() {
         
         <div className="mt-12 p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800">
           <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
-            💡 <strong>Note:</strong> The contact form currently opens your email client. We can integrate with a backend service like Formspree or Netlify Forms for real-time submissions.
+            🚀 <strong>Ready to connect!</strong> Your message will be sent directly to my email. I typically respond within 24 hours.
           </p>
         </div>
       </div>
